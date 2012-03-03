@@ -1,0 +1,57 @@
+body {
+    padding-top: 44px;
+}
+.user-item {
+    border-bottom: 1px solid #ccc;
+    position: relative;
+    padding: 8px;
+    padding-left: 64px;
+    padding-right: 84px;
+    min-height: 48px;
+}
+.user-item .unfollow-btn {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+}
+.user-item .avatar {
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    -webkit-border-radius: 6px;
+    -webkit-box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 1);
+}
+.user-item .account-group {
+    color: #999;
+    font-size: 14px;
+}
+.user-item .account-group:hover {
+    text-decoration: none;
+}
+.user-item .account-group:hover .fullname {
+    color: #829922;
+}
+.user-item .account-group .fullname {
+    color: #333;
+}
+.user-item .account-group .username {
+    font-size: 12px;
+}
+.user-item .bio {
+    color: #777;
+    word-wrap: break-word;
+}
+.user-item .last-status .via {
+    font-size: 12px;
+    color: #999;
+    text-align: right;
+}
+
+.footer {
+    border-top: 1px solid #999;
+    line-height: 30px;
+    padding: 10px 0 10px 0;
+}
+.footer .appengine {
+    float: right;
+}

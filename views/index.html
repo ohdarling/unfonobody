@@ -1,0 +1,153 @@
+<html>
+<head>
+    <title>Unfollow Nobody</title>
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/main.css" />
+    <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="/">Unfollow Nobody</a>
+            <ul class="nav pull-right">
+            {% if oauth_data %}
+                <li><a target="_blank" href="http://twitter.com/{{ oauth_data.screen_name }}">@{{ oauth_data.screen_name }}</a></li>
+                <li><a href="/logout">Sign out</a></li>
+            {% else %}
+                <li><a href="/login">Sign in with Twitter</a></li>
+            {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+<div class="row">
+    <div class="span12">
+        <form class="form-horizontal">
+            <fieldset>
+                <legend>Setttings</legend>
+                <div class="control-group">
+                    <label class="control-label" for="confirm_unfollow">Confirm Unfollow</label>
+                    <div class="controls">
+                        <label class="checkbox">
+                            <input id="confirm_unfollow" type="checkbox" value="1" checked="checked" />
+                            Confirm the action before unfollow a user
+                        </label>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Inactive Following List</label>
+                    <div class="controls">
+                        {% if has_list %}
+                        <a target="_blank" class="btn" href="http://twitter.com/{{ oauth_data['screen_name'] }}/inactive-following">View list</a>
+                        {% else %}
+                        <a href="/create_list" class="btn">Create List</a>
+                        Create a list "Inactive Following" for saving unfollowed users, use exists list if it already created
+                        {% endif %}
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Following</legend>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+<div class="row" id="users">
+{% if oauth_data %}
+    <div class="span6">
+    {% for user in friends %}
+        {% if loop.index == 51 %}
+            </div>
+            <div class="span6">
+        {% endif %}
+    
+        <div class="user-item" data-item-id="{{ user.id }}" data-item-type="user">
+            <a class="unfollow-btn btn" data-user-id="{{ user.id }}">Unfollow</a>
+            <div class="content">
+                <div class="stream-item-header">
+                    <a class="account-group" target="_blank" href="http://twitter.com/{{ user.screen_name }}">
+                        <img class="avatar" src="{{ user.profile_image_url }}" alt="Hsiaoming Young" data-user-id="{{ user.id }}">
+                        <strong class="fullname">{{ user.name }}</strong>
+                        <span>‏</span>
+                        <span class="username">@{{ user.screen_name }}</span>
+                    </a>
+                </div>
+                <p class="bio ">{{ user.description }}</p>
+            </div>
+            {% if user.status %}
+            <div class="last-status">
+                <div>
+                    <strong>Last Status posted on </strong>
+                    <span>{{ user.status.created_at }}:</span>
+                </div>
+                <div>
+                    {% if (user.status.created_at.now() - user.status.created_at).days > 90 %}
+                    <span class="label label-important">&gt; 90 days</span>
+                    {% elif (user.status.created_at.now() - user.status.created_at).days > 30 %}
+                    <span class="label label-warning">&gt; 30 days</span>
+                    {% endif %}
+                    {{ user.status.text }}
+                </div>
+                <div class="via">{{ user.status.source }}</div>
+            </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+    </div>
+    
+    <div class="span12">
+        <div class="pagination">
+            <ul>
+            {% for page in range(1, total_pages+1) %}
+                {% if page == cur_page %}
+                <li class="active">
+                    <a href="#">{{ page }}</a>
+                </li>
+                {% else %}
+                <li><a href="/?page={{ page }}">{{ page }}</a></li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+{% else %}
+    <div class="span12">
+        <h1>Sign In</h1>
+        <p>
+            <a href="/login" class="btn btn-primary">Sign in with Twitter</a>
+        </p>
+    </div>
+{% endif %}
+</div>
+
+<div class="row">
+    <div class="span12 footer">
+        <a href="https://github.com/ohdarling88/unfounbody">Fork on GitHub</a> | 
+        <a href="https://twitter.com/ohdarling88">Follow Me (@ohdarling88)</a>
+        <a class="appengine" href="http://code.google.com/appengine"><img src="http://code.google.com/appengine/images/appengine-noborder-120x30.gif" alt="Powered by Google App Engine" /></a>
+    </div>
+</div>
+
+</div> <!-- end container -->
+
+<script>
+$('#users .unfollow-btn').live('click', function() {
+    var userId = $(this).attr('data-user-id');
+    var userItem = $(this).parent();
+    if (!$('#confirm_unfollow').get(0).checked || confirm('Unfollow ' + $('.fullname', userItem).text() + "?")) {
+        $.post('/unfollow', { user_id : userId }, function(data, status, xhr) {
+            userItem.fadeOut();
+        });
+    }
+});
+</script>
+
+</body>
+</html>
