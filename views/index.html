@@ -104,9 +104,9 @@
                 </div>
                 <div>
                     {% if (user.status.created_at.now() - user.status.created_at).days > 90 %}
-                    <span class="label label-important">&gt; 90 days</span>
+                    <span class="label label-important">{{(user.status.created_at.now() - user.status.created_at).days}} days</span>
                     {% elif (user.status.created_at.now() - user.status.created_at).days > 30 %}
-                    <span class="label label-warning">&gt; 30 days</span>
+                    <span class="label label-warning">{{(user.status.created_at.now() - user.status.created_at).days}} days</span>
                     {% endif %}
                     {{ user.status.text }}
                 </div>
@@ -163,7 +163,7 @@
 $('#users .unfollow-btn').live('click', function() {
     var userId = $(this).attr('data-user-id');
     var userItem = $(this).parent();
-    if (!$('#confirm_unfollow').get(0).checked || confirm('Unfollow ' + $('.fullname', userItem).text() + "?")) {
+    if (!$('#confirm_unfollow').get(0).checked || confirm('Unfollow ' + $.trim($('.fullname', userItem).text()) + "?")) {
         $.post('/unfollow', { user_id : userId }, function(data, status, xhr) {
             userItem.fadeOut();
         });
