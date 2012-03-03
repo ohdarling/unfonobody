@@ -25,6 +25,7 @@
 
 <div class="container">
 
+{% if oauth_data %}
 <div class="row">
     <div class="span12">
         <form class="form-horizontal">
@@ -46,7 +47,7 @@
                         <a target="_blank" class="btn" href="http://twitter.com/{{ oauth_data['screen_name'] }}/inactive-following">View list</a>
                         {% else %}
                         <a href="/create_list" class="btn">Create List</a>
-                        Create a list "Inactive Following" for saving unfollowed users, use exists list if it already created
+                        Create a list "Inactive Following" for saving unfollowed users, will use exists list if it was already created
                         {% endif %}
                     </div>
                 </div>
@@ -59,7 +60,6 @@
 </div>
 
 <div class="row" id="users">
-{% if oauth_data %}
     <div class="span6">
     {% for user in friends %}
         {% if loop.index == 51 %}
@@ -83,8 +83,8 @@
             {% if user.status %}
             <div class="last-status">
                 <div>
-                    <strong>Last Status posted on </strong>
-                    <span>{{ user.status.created_at }}:</span>
+                    <span>Last Status posted on </span>
+                    <strong>{{ user.status.created_at }}:</strong>
                 </div>
                 <div>
                     {% if (user.status.created_at.now() - user.status.created_at).days > 90 %}
@@ -95,6 +95,10 @@
                     {{ user.status.text }}
                 </div>
                 <div class="via">{{ user.status.source }}</div>
+            </div>
+            {% else %}
+            <div class="last-status">
+                <span>Unkown last stauts</span>
             </div>
             {% endif %}
         </div>
@@ -116,16 +120,18 @@
             </ul>
         </div>
     </div>
-
+</div>
 {% else %}
+<div class="row">
     <div class="span12">
-        <h1>Sign In</h1>
         <p>
+            <br />
             <a href="/login" class="btn btn-primary">Sign in with Twitter</a>
+            <br /><br />
         </p>
     </div>
-{% endif %}
 </div>
+{% endif %}
 
 <div class="row">
     <div class="span12 footer">

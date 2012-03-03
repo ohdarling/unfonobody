@@ -209,7 +209,8 @@ class CreateInactiveListHandler(webapp.RequestHandler):
             
         if list == None:
             api.create_list(name = 'Inactive Following', mode = 'private', description = 'Inactive following users')
-            session['has_list'] = True
+            
+        session['has_list'] = True
             
         self.redirect('/')
 
