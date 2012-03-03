@@ -60,6 +60,22 @@
 </div>
 
 <div class="row" id="users">
+    <div class="span12">
+        <div class="pagination">
+            <ul>
+            {% for page in range(1, total_pages+1) %}
+                {% if page == cur_page %}
+                <li class="active">
+                    <a href="#">{{ page }}</a>
+                </li>
+                {% else %}
+                <li><a href="/?page={{ page }}">{{ page }}</a></li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+
     <div class="span6">
     {% for user in friends %}
         {% if loop.index == 51 %}
